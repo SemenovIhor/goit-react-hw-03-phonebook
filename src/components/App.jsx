@@ -16,10 +16,6 @@ export class App extends Component {
     filter: '',
   }
 
-  saveContacts = () => {
-    localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-  }
-
   componentDidMount() {
     const contactsParse = JSON.parse(localStorage.getItem('contacts'));
     if (contactsParse) {
@@ -27,6 +23,13 @@ export class App extends Component {
         contacts: contactsParse});
     }
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
 
   
   formSubmitHandler = data => {
@@ -39,9 +42,6 @@ export class App extends Component {
           return { contacts: [...prevState.contacts, newContant] };
         });
       }
-      setInterval(() => {
-        this.saveContacts()
-      }, 250); 
   }
   
   filterInput = ({filter}) => {
@@ -54,9 +54,6 @@ export class App extends Component {
     this.setState(
       {contacts: newState} 
     );
-    setInterval(() => {
-      this.saveContacts()
-    }, 250); 
   }
 
   getFilteredContacts = () => {
